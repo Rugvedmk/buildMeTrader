@@ -2,8 +2,8 @@ import { NavLink, NavNavLink } from "react-router-dom";
 
 function NavBar() {
   return (
-    <div className="flex justify-between p-7">
-      <div>BuildMeTrader</div>
+    <div className="flex justify-between p-7 font-medium">
+      <div className="font-bold text-2xl">BuildMeTrader</div>
       <nav>
         <ul className="flex justify-between space-x-8">
           <li>
