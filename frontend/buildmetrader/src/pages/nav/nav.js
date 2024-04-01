@@ -2,8 +2,8 @@ import { NavLink, NavNavLink } from "react-router-dom";
 
 function NavBar() {
   return (
-    <div className="flex justify-between p-7">
-      <div>BuildMeTrader</div>
+    <div className="flex justify-between p-7 font-medium">
+      <div className="font-bold text-2xl">BuildMeTrader</div>
       <nav>
         <ul className="flex justify-between space-x-8">
           <li>
@@ -16,7 +16,7 @@ function NavBar() {
               Home
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink
               to="strategies"
               className={({ isActive }) =>
@@ -25,7 +25,7 @@ function NavBar() {
             >
               Strategies
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink
               to="rules"
@@ -36,7 +36,7 @@ function NavBar() {
               Rules
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink
               to="mistakes"
               className={({ isActive }) =>
@@ -44,6 +44,16 @@ function NavBar() {
               }
             >
               Mistakes
+            </NavLink>
+          </li> */}
+          <li>
+            <NavLink
+              to="landing"
+              className={({ isActive }) =>
+                isActive ? "text-blue-700 font-bold" : ""
+              }
+            >
+              Landing
             </NavLink>
           </li>
         </ul>
