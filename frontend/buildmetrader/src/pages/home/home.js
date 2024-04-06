@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import profileimg from "./images/defaultprofileimg.jpg";
+import AddStock from "./components/addStock";
+import Profile from "./components/Profile";
+import WatchList from "./components/watchlist";
+import axios from "axios";
+import News from "./components/news";
 
 const watchlist = [
   {
@@ -20,9 +25,24 @@ const watchlist = [
   },
 ];
 
+const PostContextHome = createContext();
+
 function Home() {
-  const [mywatch, setmywatch] = useState(watchlist);
+  const [mywatch, setmywatch] = useState([]);
   const [Add, setAdd] = useState(false);
+  const userID = JSON.parse(localStorage.getItem("user")).id;
+
+  useEffect(() => {
+    const fetchwatchList = async () => {
+      const newList = await axios.get(
+        `http://localhost:5000/watchlist/${userID}`
+      );
+      setmywatch(newList.data);
+      console.log(newList.data);
+    };
+
+    fetchwatchList();
+  }, []);
 
   function addNewWatch(stock) {
     setmywatch((mywatch) => [...mywatch, stock]);
@@ -31,79 +51,34 @@ function Home() {
   }
 
   return (
-    <div className="grid grid-cols-12 divide-x-2">
-      <Profile />
-      <div className="col-span-9 flex flex-col">
-        <WatchList watchlist={mywatch} />
-        {Add && <AddStock addNewWatch={addNewWatch} />}
-        <button onClick={() => setAdd(!Add)}>{Add ? "CLOSE" : "ADD"}</button>
+    <PostContextHome.Provider
+      value={{
+        profileimg,
+        watchlist: mywatch,
+        addNewWatch,
+        setmywatch,
+        userID,
+      }}
+    >
+      <div className="grid grid-cols-12 divide-x-2">
+        <div className="col-span-3 flex flex-col">
+          <WatchList />
+          {Add && <AddStock addNewWatch={addNewWatch} />}
+          <div className="flex justify-end mx-10 my-5">
+            <button
+              className="mx-5 px-5 py-2 font-medium rounded-full hover:text-lg hover:shadow-lg"
+              onClick={() => setAdd(!Add)}
+            >
+              {Add ? "CLOSE" : "ADD"}
+            </button>
+          </div>
+        </div>
+        {/* <Profile profileimg={profileimg} /> */}
+        <News />
       </div>
-    </div>
-  );
-}
-
-function AddStock({ addNewWatch }) {
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    if (!name || !link) {
-      alert("fill all the details");
-      return;
-    }
-
-    const newStock = {
-      name,
-      link,
-    };
-
-    addNewWatch(newStock);
-  }
-  return (
-    <form>
-      <label>Name</label>
-      <input type="text" onChange={(e) => setName(e.target.value)} />
-
-      <label>Link</label>
-      <input type="text" onChange={(e) => setLink(e.target.value)} />
-
-      <button onClick={handleSubmit}>Add</button>
-    </form>
-  );
-}
-
-function Profile() {
-  return (
-    <div className="col-span-3 flex flex-col p-4">
-      <div className="grid grid-rows-auto justify-items-center mb-4">
-        <img src={profileimg} alt="image not found" />
-        <div className="justify-center">Name</div>
-      </div>
-      <div>Email:asdnkj@sd.com</div>
-      <div>Phone no.:1234567890</div>
-    </div>
-  );
-}
-
-function WatchList({ watchlist }) {
-  const mywatch = watchlist;
-
-  return (
-    <>
-      <div>WatchList</div>
-      <div>
-        <ul>
-          {mywatch.map((watch) => (
-            <li>
-              <a href={watch.link}>{watch.name}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    </PostContextHome.Provider>
   );
 }
 
 export default Home;
+export { PostContextHome };

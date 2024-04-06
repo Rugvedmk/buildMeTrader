@@ -2,7 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./pages/nav/nav";
 import Home from "./pages/home/home";
 import Footer from "./pages/nav/footer/footer";
+import Landing from "./pages/landing/landing";
 import "./App.css";
+import Rules from "./pages/rules/rules";
+import PrivateComponent from "./components/privateComponent";
 
 function App() {
   return (
@@ -10,12 +13,13 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <Routes>
-          <Route path="" element={<Home />} />
-          <Route path="home" element={<Home />} />
-          <Route path="strategies" element={<h1>Strategies</h1>} />
-          <Route path="Rules" element={<h1>Rules</h1>} />
-          <Route path="Mistakes" element={<h1>Mistakes</h1>} />
+          <Route element={<PrivateComponent />}>
+            <Route path="" element={<Home />} />
+            <Route path="home" element={<Home />} />
+            <Route path="Rules" element={<Rules />} />
+          </Route>
           <Route path="*" element={<h1>Page Not Found</h1>} />
+          <Route path="login" element={<Landing />} />
         </Routes>
         <Footer />
       </BrowserRouter>
